@@ -1,4 +1,3 @@
-import { div, img } from 'framer-motion/client'
 import React from 'react'
 
 const Marqee = () => {
@@ -13,10 +12,10 @@ const Marqee = () => {
   ];
 
   return (
-    <div className='w-full flex items-center justify-evenly px-10 my-50'>
+    <div className='w-full flex flex-wrap lg:flex-nowrap items-center justify-center lg:justify-between gap-10 px-6 lg:px-14 my-20 pb-15'>
        {imgs.map((item, idx) => (
-        <div className='w-26'>
-          <img className='w-full object-cover'  key={idx} src={item} alt="brand" />
+        <div key={idx} className='w-20 sm:w-24 lg:w-28'>
+          <img className='w-full object-contain' src={item} alt="brand" />
         </div>
       ))}
     </div>

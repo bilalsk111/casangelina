@@ -14,18 +14,9 @@ const Concept = () => {
 
       const split = new SplitType(".ethosText", { types: "chars" });
 
-      gsap.set(split.chars, {
-        yPercent: 120,
-        display: "inline-block"
-      });
-
-      gsap.set(".imgMask", {
-        scaleY: 0,
-        transformOrigin: "bottom"
-      });
-
+      gsap.set(split.chars, { yPercent: 120, display: "inline-block" });
+      gsap.set(".imgMask", { scaleY: 0, transformOrigin: "bottom" });
       gsap.set(".imgMask img", { scale: 1.2 });
-
       gsap.set(".paraMask", { y: 80 });
 
       const tl = gsap.timeline({
@@ -37,28 +28,12 @@ const Concept = () => {
         }
       });
 
-      tl.to(split.chars, {
-        yPercent: 0,
-        stagger: 0.05,
-        ease: "power3.out"
-      })
-      .to(".imgMask", {
-        scaleY: 1,
-        duration: 1
-      }, "-=0.4")
-      .to(".imgMask img", {
-        scale: 1,
-        duration: 1
-      }, "<")
-      .to(".paraMask", {
-        y: 0,
-        duration: 1
-      }, "-=0.5");
+      tl.to(split.chars,{ yPercent: 0, stagger: 0.05 })
+        .to(".imgMask",{ scaleY: 1, duration: 1 }, "-=0.4")
+        .to(".imgMask img",{ scale: 1, duration: 1 },"<")
+        .to(".paraMask",{ y: 0, duration: 1 },"-=0.5");
 
-
-      /* BACKGROUND PARALLAX (IMAGE BG) */
-      gsap.fromTo(
-        ".parallaxBg",
+      gsap.fromTo(".parallaxBg",
         { backgroundPosition: "50% 80%" },
         {
           backgroundPosition: "50% 20%",
@@ -72,9 +47,7 @@ const Concept = () => {
         }
       );
 
-      /* TEXT PARALLAX */
-      gsap.fromTo(
-        ".parallaxText",
+      gsap.fromTo(".parallaxText",
         { y: 80 },
         {
           y: -80,
@@ -94,41 +67,41 @@ const Concept = () => {
   }, []);
 
   return (
-    <div ref={sectionRef} className="relative w-full h-[100vh] bg-[#d7cfc5] py-10">
+    <div ref={sectionRef} className="relative w-full min-h-screen bg-[#d7cfc5] py-16 px-6 lg:px-20">
 
-      <div className="relative -top-20 left-20 flex items-end gap-6 z-30 ">
-        <div className="w-64 overflow-hidden bg-[#d7cfc5]">
-          <div className="imgMask w-full h-full">
+      <div className="relative -top-30 flex items-end gap-6">
+        <div className=" w-40 sm:w-56 lg:w-64 overflow-hidden bg-[#d7bb99]">
+          <div className="imgMask w-full h-45 ">
             <img className="w-full h-full object-cover" src="/ethos.jpg" alt="" />
           </div>
         </div>
 
         <div className="overflow-hidden">
-          <h4 className="ethosText p-2 text-[#473f3a] font-[LMroman10] text-5xl">
+          <h4 className="ethosText text-[#473f3a] font-[LMroman10] text-3xl sm:text-4xl lg:text-5xl">
             ethos
           </h4>
         </div>
       </div>
 
-      <div className="overflow-hidden ml-65">
-        <p className="paraMask w-[25vw] text-xl font-[LMroman10] text-[#473f3a] leading-[1.65]">
+      <div className="overflow-hidden mt-6 ml-45">
+        <p className="paraMask  max-w-xl text-lg lg:text-xl font-[LMroman10] text-[#473f3a] leading-[1.65]">
           Understated chic is our design ethos and subtle details are our
           raison d'être.
         </p>
       </div>
-      <div className="absolute -bottom-20 w-full flex justify-around">
 
+      <div className="lg:mt-5 mt-15 flex flex-col lg:flex-row items-start gap-12 relative lg:-bottom-30">
         <div
-          className="parallaxBg w-[45vw] h-[420px] bg-cover bg-center"
+          className="parallaxBg w-full lg:w-[45vw] h-[320px] lg:h-[420px] bg-cover bg-center"
           style={{ backgroundImage: "url(/ethosPic.jpg)" }}
         ></div>
 
-        <p className="parallaxText w-[25vw] text-xl text-[#443c38] font-[LMroman10]">
-         We ensure everything about your stay is immaculate, from the pillowy white Etro cotton sheets dressing your bed to the thoughtfully-placed garden-grown herb garnishes on your plate.
+        <p className="parallaxText max-w-xl text-lg lg:text-xl text-[#443c38] font-[LMroman10]">
+          We ensure everything about your stay is immaculate, from the pillowy white Etro cotton sheets dressing your bed to the thoughtfully-placed garden-grown herb garnishes on your plate.
         </p>
-
       </div>
-  <MagneticButton text="concept" sectionRef={sectionRef} />
+
+      <MagneticButton text="concept" sectionRef={sectionRef} />
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 
 const Navbar = ({ setOpen }) => {
   const { scrollY } = useScroll();
   const [vh, setVh] = useState(0);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     setVh(window.innerHeight);
@@ -13,39 +14,65 @@ const Navbar = ({ setOpen }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const targetRange = [vh - 1, vh];
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious();
+    if (latest > previous && latest > 150) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+  });
 
+  const targetRange = [vh - 1, vh];
   const color = useTransform(scrollY, targetRange, ["#ffffff", "#6E6259"]);
   const border = useTransform(scrollY, targetRange, ["#ffffff", "#6E6259"]);
   const buttonBg = useTransform(scrollY, targetRange, ["#ffffff", "#6E6259"]);
   const buttonText = useTransform(scrollY, targetRange, ["#6E6259", "#ffffff"]);
-  const iconHoverColor = useTransform(scrollY, targetRange, ["#6E6259", "#ffffff"]);
   const iconHoverBg = useTransform(scrollY, targetRange, ["#ffffff", "#6E6259"]);
+  const iconHoverColor = useTransform(scrollY, targetRange, ["#6E6259", "#ffffff"]);
+
+  const itemVariants = {
+    visible: (i) => ({
+      y: 0,
+      opacity: 1,
+      transition: { delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+    }),
+    hidden: (i) => ({
+      y: -80,
+      opacity: 0,
+      transition: { delay: (1 - i) * 0.1, duration: 0.4 }
+    })
+  };
+  const iconChildVariants = {
+    visible: (i) => ({
+      y: 0,
+      opacity: 1,
+      transition: { delay: 0.2 + (i * 0.1), duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+    }),
+    hidden: (i) => ({
+      y: -80,
+      opacity: 0,
+      transition: { delay: (2 - i) * 0.05, duration: 0.3 }
+    })
+  };
 
   const circleClass = "group w-10 h-10 rounded-full border flex items-center justify-center cursor-pointer overflow-hidden relative transition-none";
 
   return (
     <motion.nav
       className="w-full h-24 py-4 px-10 fixed top-0 left-0 z-50 flex items-center justify-between pointer-events-auto bg-transparent"
-      style={{ 
-        color,
-        "--icon-hover-color": iconHoverColor 
-      }}
+      style={{ color, "--icon-hover-color": iconHoverColor }}
     >
       <div className="left flex items-center gap-12 h-full">
-        <div
-          onClick={() => setOpen(true)}
-          className="group relative flex h-16 w-16 cursor-pointer items-center justify-center rounded-full transition-all duration-300 hover:bg-black/5"
-        >
+        <div onClick={() => setOpen(true)} className="group relative flex h-16 w-16 cursor-pointer items-center justify-center rounded-full transition-all duration-300 hover:bg-black/5">
           <div className="flex w-10 flex-col gap-1.5">
             <motion.div style={{ backgroundColor: color }} className="h-[1.5px] w-full" />
             <motion.div style={{ backgroundColor: color }} className="h-[1px] py-[0.5px] w-full" />
             <motion.div style={{ backgroundColor: color }} className="h-[1.5px] w-full" />
           </div>
         </div>
-
-        <div className="w-64 pt-4">
-          <svg className="p-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 854.56 135.26">
+        <motion.div custom={0} variants={itemVariants} animate={hidden ? "hidden" : "visible"} className="logo w-64 pt-4">
+           <svg className="p-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 854.56 135.26">
             <defs>
               <g id="caLogo">
                 <path d="M764.58,39.55c1.25-3.23.95-8.12.87-9.81S764.23,28,762.08,28a36.61,36.61,0,0,0-6.91,1.52c-2.16.54-4.25,1.19-5.45,1.43-2.72.58-5.69,2.66-4.72,4.42s4.38-.47,8.09-1.44c.73-.24,1.44-.4,2.08-.56,2.75-.73,5-1.21,5-1.21a28.23,28.23,0,0,0-.69,6.19c.24,2.26,3.76,4.5,5.13,1.2"></path>
@@ -53,11 +80,10 @@ const Navbar = ({ setOpen }) => {
                 <path d="M846.38,49.39c2.89-3.76,3.11-9.87-4.66-9.31-3.61.25-9.46,2.89-15.4,5.78-7.08,3.61-12.53,6.53-17.43,8.77-5.57,2.54-17.11,9.21-22.64,7.21,4.4-4.34,12-7.55,13.64-9.24s.64-4.4-3.11-4.4-15.1,7-20.34,9.3-15.72,3.79-15.72,3.79c1.21-4.11,5.22-6.43,7-8.45s-2-3.76-6.1-2.32c-1.45.56-3.77,1.77-6.43,3.12-4.48,2.33-9.93,5.33-14.11,6.75-6.68,2.32-24.11,7-24.4,3.22s7.53-8.43,13.34-11,7.29-6.08,2.61-6.08-13.63,5.21-18.85,6.9l-5.88,2.08c-2.4.86-5.22,1.85-8.17,2.81l.1-.17C694.16,60,688,61.73,683,62.26c-6.37.75-9.1.47-9.34-1.19-.07-1,.67-2.45,2-4.44a16.84,16.84,0,0,1,1.59-1.91l-.06,0c4.33-4.25,12.28-6.23,20.32-9.79,2.48-1.19,6.26-3,10.33-5.11,10.54-5.31,23.53-12.61,26.5-16.39,4-5.22,2.26-8.43-5.27-8.43-4.82,0-13.42,3.37-21.23,7.08a125.8,125.8,0,0,0-11.2,6C688.45,33,672.26,48.7,672.26,48.7c-6.45,2.14-12.52,4.17-18.12,6a1.33,1.33,0,0,0-.14.19c-8,2.55-14.91,4.63-20.36,5.85-3.92.81-8.48,1.94-12.92,2.66-6,.87-11.48,1-14.3-1.53a148.8,148.8,0,0,0,14.3-7.31,189.2,189.2,0,0,0,16.13-10.11c5.24-3.77,4.32-7.79-4-8.66-3.45-.42-7.85,1.18-12.11,3.44a79.89,79.89,0,0,0-14.3,9.64,89.46,89.46,0,0,0-9,9.55c-12.2,1.11-21.51.58-24.72-4.34,4.64-3.53,11.61-7,14.29-9s-5.29-5.85-9.87,0c-1.21-9.29-12.21-8.18-20.32-5.29-3.37,1.31-5.95,2.58-8.11,3.53-3.05,1.37-5.27,2.1-7.85,1-4.34-2.08-12.21,9.47-20.34,12-7.39,2.42-24.38,7.71-32.43,6.82a6.25,6.25,0,0,1-2.08-.4c-6.66-2.32-8.74-5.21-2.87-10.42a41.5,41.5,0,0,0,4.95-5.3c2-2.65,2.5-4.65,0-4.91h-1.2c-5.85.65-10.41,9-17.41,11.65s-23.51,11-29.28,11-11.1-2.58-4.36-9,11.88-9.88,13.56-12.21-.81-4.88-6.9-2-18.37,6.9-30.58,11.22-22.3,8.11-29.28,8.11-3.89-11.25-.42-13.83S395.53,37.17,401.08,34s5.77-2.66,10.75-2,8.11-7-5.22-6.11c11.24-11.08,15.88-21.19,1.71-19.74C396.09,7.3,386.48,9,365,18.71c-3.53,1.51-7.38,3.37-11.56,5.38-13.88,6.66-29.3,17.42-37.4,27-4.11,4.81-6.76,8.66-7.24,11.79V64.7c.42,2.08,2.1,3.69,5.45,4.9,8.78,3.21,24.66-2.32,36.63-8.66,6.27-3.39,11-6,14.12-7.71,2.73-1.61,4.1-2.5,4.1-2.5S366.55,70.67,384,68.67s43.07-14.62,43.07-14.62-9.22,11.56,2,15.09,26.43-3.53,42.7-10.75c-.22,6.19,8.19,9.16,16.29,9.4a32.87,32.87,0,0,0,9.24-1c9-2.64,22.64-5.22,22.64-5.22,3.47,9.24,23.47,5.79,23.47,5.79-5.23,2-18.32,13-18.32,13-15.91,4.16-26.32,7.85-37,13.63a149,149,0,0,0-13.38,8.19c-16.53,11-19.18,17.09-20.63,20.56s-.26,8.42,8.74,7c5.37-.87,15.9-6.34,25.27-12a149,149,0,0,0,15.45-10.6c8.42-7,28.32-22.64,36.11-29.3,2.22-1.87,5.43-4.42,9.06-7.08,9-6.74,20-14.45,20-14.45,6.31,5.31,14,9.89,29.7,7,3.84,4.58,13.5,5.13,22.32,4.4a87.91,87.91,0,0,0,13.56-2.08c8.63-2,30.51-8.61,30.73-8.68-.07.61-.11,1.2-.12,1.76-.21,8.57,6.5,10.08,15.47,9.26,9.4-.9,26.8-6.19,27.52-6.35-.94,2.64-.94,4.74,0,6.35,1.86,2.89,6.91,3.68,14.86,2,12.21-2.56,27.87-8.11,27.87-8.11a8.12,8.12,0,0,0,4.56,3.77c5.55,2.26,14.24.81,22.08-2,6.43,7,24.07.23,24.07.23,5.63,5.14,20.34.5,25-1.19l1.42-.49a16.62,16.62,0,0,0-1.42,4.74v1.68c.39,3.69,3.27,5.69,6.4,6.34,4.68.9,10.68-.89,7.55-2.89s-7.85-1.45-5.53-6.42S843.4,53.18,846.38,49.39ZM707.88,27.25c6.91-3.29,14-5.61,17.6-5.61-2,2.5-9.71,7.71-17.6,12.29-7.12,4.16-14.43,7.77-17.47,8.27C691,37.38,699.31,31.51,707.88,27.25ZM620.72,44.66c4.66-2.32,9.31-3.69,9.41-3,.22,2.26-4.6,5.24-9.41,7.55a101,101,0,0,1-9.34,4C611.82,50.11,616.3,46.92,620.72,44.66ZM370.16,41.91c-1.27.73-3.05,1.68-5.13,2.81-12.53,6.58-36.52,18.46-40.86,18.46-5.05,0-3.45-4.74,1.27-10.35s25.61-19.45,37.35-25.53c.71-.4,1.42-.72,2.24-1.13,18-8.74,37.58-14.85,41.35-15.09,4-.33,2.95,1.05-.8,4.74S379.24,36.85,370.16,41.91ZM488.08,108.8c-2.14,1.53-4,2.9-5.55,4.1-6.4,5-16.69,11.32-19.18,10.51s.59-4.16,5.15-8.11c3.89-3.37,12.21-10.9,19.58-15.24a38.47,38.47,0,0,1,4-2.1c7.93-3.53,21.33-9.71,21.57-8.43C504.4,97.15,494.9,103.83,488.08,108.8ZM548.7,59.26a25.77,25.77,0,0,1-7.23,2c-8,.63-11.54,1-11.24-1.29s10.62-7.06,12.23-8.35c1.35-1.13,2.22-.33,6.24-1.54a20.15,20.15,0,0,1,2.1-.72c5.79-2.24,14.12-7.71,16.38-6.74C563.15,50.11,555.62,56.21,548.7,59.26ZM828.23,57c-3.62,1.67-8.41,3.69-11.37,4.13A1.41,1.41,0,0,1,815.23,60c-.22-1.32,2.19-4.39,10-8.6A65.59,65.59,0,0,1,835,47.15c3.86-1.6,5.13-1.6,2.89,1.93A23.77,23.77,0,0,1,828.23,57Z"></path>
               </g>
             </defs>
-            <use fill="currentColor" x="0" y="0" xlinkHref="#caLogo"></use>
+            <use fill="currentColor" xlinkHref="#caLogo"></use>
           </svg>
-        </div>
-
-        <div className="flex items-center gap-4 text-md font-medium tracking-[0.2em]">
+        </motion.div>
+        <motion.div custom={1} variants={itemVariants} animate={hidden ? "hidden" : "visible"} className="lang flex items-center gap-4 text-md font-medium tracking-[0.2em]">
           <div className="group cursor-pointer">
             <span>english</span>
             <motion.div style={{ backgroundColor: color }} className="h-[1px] w-full mt-1" />
@@ -67,11 +93,12 @@ const Navbar = ({ setOpen }) => {
             <span className="opacity-60 group-hover:opacity-100 transition-opacity">italiano</span>
             <motion.div style={{ backgroundColor: color }} className="h-[1px] w-0 mt-1 transition-all duration-300 group-hover:w-full" />
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <div className="right flex items-center gap-8">
-        <div className="flex items-center gap-4">
+        {/* ICONS CONTAINER */}
+        <div className="icons flex items-center gap-4">
           {[
             { d: "M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z", view: "0 0 24 24" },
             { d: "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z", view: "0 0 24 24" },
@@ -79,35 +106,24 @@ const Navbar = ({ setOpen }) => {
           ].map((icon, index) => (
             <motion.div
               key={index}
+              custom={index}
+              variants={iconChildVariants}
+              animate={hidden ? "hidden" : "visible"}
               style={{ borderColor: border }}
               whileHover="hover"
               className={circleClass}
             >
-              <motion.div
-                variants={{ hover: { y: "0%" } }}
-                initial={{ y: "100%" }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                style={{ backgroundColor: iconHoverBg }}
-                className="absolute inset-0 w-full h-full"
-              />
-              <svg
-                className="w-4 h-4 z-10 transition-colors duration-300 fill-current group-hover:!text-[var(--icon-hover-color)]"
-                viewBox={icon.view}
-                style={{ color: "inherit" }}
-              >
+              <motion.div variants={{ hover: { y: "0%" } }} initial={{ y: "100%" }} transition={{ duration: 0.3 }} style={{ backgroundColor: iconHoverBg }} className="absolute inset-0 w-full h-full" />
+              <svg className="w-4 h-4 z-10 transition-colors duration-300 fill-current group-hover:!text-[var(--icon-hover-color)]" viewBox={icon.view} style={{ color: "inherit" }}>
                 <path d={icon.d} />
               </svg>
             </motion.div>
           ))}
         </div>
 
-        <motion.div
-          style={{ backgroundColor: buttonBg, color: buttonText }}
-          className="group rounded-full flex items-center gap-1 transition-all duration-300 overflow-hidden"
-        >
-          <button className="rounded-full px-4 py-3 font-bold text-lg tracking-widest font-[Geometria]">
-            book now
-          </button>
+        {/* BOOK NOW - Static */}
+        <motion.div style={{ backgroundColor: buttonBg, color: buttonText }} className="group rounded-full flex items-center gap-1 transition-all duration-300 overflow-hidden">
+          <button className="rounded-full px-4 py-3 font-bold text-lg tracking-widest font-[Geometria]">book now</button>
           <ArrowUpRight size={18} className="group-hover:-rotate-45 transition-all duration-300 mr-2" />
         </motion.div>
       </div>
