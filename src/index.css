@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+
+*::-webkit-scrollbar{
+    display: none;
+}
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+@layer base {
+  @font-face {
+    font-family: 'Notera';
+    src: url('/fonts/notera-webfont.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'GeometriaLight';
+    src: url('/fonts/geometria-light-webfont.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Geometria';
+    src: url('/fonts/geometria.woff2') format('woff2');
+    font-weight: 400;
+  }
+
+  @font-face {
+    font-family: 'Geometria2';
+    src: url('/fonts/geometria-medium.woff2') format('woff2');
+    font-weight: 500;
+  }
+  @font-face {
+    font-family: 'LMroman10';
+    src: url('/public/fonts/lmroman10-regular-webfont.woff') format('woff');
+    font-weight: 500;
+  }
+}
+.mask{
+  overflow:hidden;
+  display:block;
+}
+.mask span{
+  display:inline-block;
+  will-change: transform;
+}
