@@ -3,6 +3,7 @@ import MagneticButton from "./MagneticButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
+import Marquee from "./Marqee";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -67,17 +68,18 @@ const Concept = () => {
   }, []);
 
   return (
-    <div ref={sectionRef} className="relative w-full min-h-screen bg-[#d7cfc5] py-16 px-6 lg:px-20">
+ <div className="">
+    <div ref={sectionRef} className="relative w-full min-h-screen bg-[#d7cfc5] py-20 px-6 lg:px-20 mb-35">
 
       <div className="relative -top-30 flex items-end gap-6">
-        <div className=" w-40 sm:w-56 lg:w-64 overflow-hidden bg-[#d7bb99]">
+        <div className="w-40 sm:w-56 lg:w-64 overflow-hidden bg-[#f0e1ce]">
           <div className="imgMask w-full h-45 ">
             <img className="w-full h-full object-cover" src="/ethos.jpg" alt="" />
           </div>
         </div>
 
         <div className="overflow-hidden">
-          <h4 className="ethosText text-[#473f3a] font-[LMroman10] text-3xl sm:text-4xl lg:text-5xl">
+          <h4 className="ethosText text-[#473f3a] font-[LMroman10] text-xl sm:text-4xl lg:text-5xl">
             ethos
           </h4>
         </div>
@@ -90,9 +92,9 @@ const Concept = () => {
         </p>
       </div>
 
-      <div className="lg:mt-5 mt-15 flex flex-col lg:flex-row items-start gap-12 relative lg:-bottom-30">
+      <div className="lg:mt-5 mt-30 flex flex-col lg:flex-row items-start gap-12 relative lg:-bottom-30">
         <div
-          className="parallaxBg w-full lg:w-[45vw] h-[320px] lg:h-[420px] bg-cover bg-center"
+          className="parallaxBg w-full lg:w-[45vw] h-[320px] lg:h-[55vh] bg-cover bg-center"
           style={{ backgroundImage: "url(/ethosPic.jpg)" }}
         ></div>
 
@@ -103,6 +105,21 @@ const Concept = () => {
 
       <MagneticButton text="concept" sectionRef={sectionRef} />
     </div>
+      <Marquee images={[
+        "/imgs/gstc.png",
+        "/imgs/vsustainability.jpg",
+        "/imgs/fsl.png",
+        "/imgs/lhwsl.png",
+        "/imgs/lhwbnh.png",
+        "/imgs/reader2025.png",
+        "/imgs/ruinart.jpg"
+      ]} />
+  <div className="flex items-start flex-col gap-6 pl-25 max-w-md text-lg lg:text-xl text-[#443c38] font-[LMroman10] py-20">
+    <p>Clean lines and lashings of white underscore the rich tones of nature’s palette.</p>
+    <p>An airy refuge, our boutique 36-room hotel is a place where guests can rediscover the forgotten rhythms of long, drawn-out days and easy, lingering evenings.</p>
+    <h6>suites</h6>
+  </div>
+ </div>
   );
 };
 

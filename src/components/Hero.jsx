@@ -4,7 +4,7 @@ import Marqee from "./Marqee";
 
 const Hero = () => {
   return (
-    <div className="w-full">
+    <div className="w-full pb-25">
 
       <div className="relative w-full h-screen">
         <video
@@ -46,7 +46,15 @@ const Hero = () => {
         </div>
       </section>
 
-      <Marqee />
+      <Marqee images={[
+        "/imgs/lhw.png",
+        "/imgs/ftg25.png",
+        "/imgs/virtuoso.png",
+        "/imgs/michelinkey.png",
+        "/imgs/michelin2025.png",
+        "/imgs/american_express.png",
+        "/imgs/serandipians.png",
+      ]} />
 
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import FullScreenNavbar from "./components/FullScreenNavbar";
@@ -6,6 +6,10 @@ import Lenis from "@studio-freight/lenis";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import Concept from "./components/Concept";
+import HorizontalCarousel from "./components/HorizontalCarousel";
+import Footer from "./components/Footer";
+import WorldClockSection from "./components/WorldClockSection";
+import Private from "./components/Private";
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -41,6 +45,10 @@ useEffect(() => {
         <FullScreenNavbar open={open} setOpen={setOpen} />
         <Hero />
        <Concept />
+       <Private />
+       <HorizontalCarousel />
+       <WorldClockSection />
+       <Footer />
     </div>
   );
 };

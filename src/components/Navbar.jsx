@@ -97,7 +97,6 @@ const Navbar = ({ setOpen }) => {
       </div>
 
       <div className="right flex items-center gap-8">
-        {/* ICONS CONTAINER */}
         <div className="icons flex items-center gap-4">
           {[
             { d: "M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z", view: "0 0 24 24" },
@@ -120,8 +119,6 @@ const Navbar = ({ setOpen }) => {
             </motion.div>
           ))}
         </div>
-
-        {/* BOOK NOW - Static */}
         <motion.div style={{ backgroundColor: buttonBg, color: buttonText }} className="group rounded-full flex items-center gap-1 transition-all duration-300 overflow-hidden">
           <button className="rounded-full px-4 py-3 font-bold text-lg tracking-widest font-[Geometria]">book now</button>
           <ArrowUpRight size={18} className="group-hover:-rotate-45 transition-all duration-300 mr-2" />

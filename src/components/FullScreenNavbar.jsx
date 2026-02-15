@@ -9,7 +9,7 @@ import { useEffect } from "react";
 
 export default function FullScreenNavbar({ open, setOpen }) {
   const { scrollY } = useScroll();
-  const iconHoverBg = useTransform(scrollY, [0, 300], ["#6E6259", "#ffffff"]);
+  const iconHoverBg = useTransform(scrollY, [0, 300], ["#ffffff", "#6E6259"]);
   const border = useTransform(scrollY, [0, 300], ["#ffffff", "#6E6259"]);
 
   useEffect(() => {
