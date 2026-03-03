@@ -97,7 +97,7 @@ const Private = () => {
         ></div>
 
         <div className="absolute inset-0 flex items-center justify-center">
-          <MagneticButton text="concept" sectionRef={sectionRef} />
+          <MagneticButton text="angelina suite" sectionRef={sectionRef} />
         </div>
       </div>
     </section>
