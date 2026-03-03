@@ -2,7 +2,7 @@
 
 
 *::-webkit-scrollbar{
-    /* display: none; */
+    display: none;
 }
 html.lenis,
 html.lenis body {
